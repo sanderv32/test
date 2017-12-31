@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -x
+
 git config --global user.email "travis@verhaar.io"
 git config --global user.name "Travis build bot"
 
