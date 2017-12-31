@@ -6,4 +6,6 @@ python:
 script:
   - ls -al
   - python bin/release.py
+  - chmod +x bin/upload.sh
+  - bin/upload.sh
   - cat manifest.json

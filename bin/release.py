@@ -118,8 +118,6 @@ def main():
     except Exception as err:
         print(err.message)
         exitcode = 1
-
-    os.system("rm -rf %s" % TMP_DIR)
     sys.exit(exitcode)
 
 
