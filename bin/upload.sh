@@ -2,6 +2,8 @@
 
 set -x
 
+git checkout master
+
 git config --global user.email "travis@verhaar.io"
 git config --global user.name "Travis build bot"
 
