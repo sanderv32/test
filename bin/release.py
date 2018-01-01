@@ -94,7 +94,8 @@ def main():
             if tag == "master":
                 if master['version'] == "master":
                     del master
-            master.insert(0, release_entry)
+            manifest_data['framework-esp8266-nonos-sdk'].insert(0,
+                                                                release_entry)
         with open(manifest_file, "w") as f_manifest:
             f_manifest.write(json.dumps(manifest_data, indent=2))
     except Exception as err:
