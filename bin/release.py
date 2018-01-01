@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""This program creates new .tar.gz version of the ESP8266-NONOS-SDK Repo."""
 # coding=utf-8
 
 from __future__ import print_function
@@ -11,7 +12,8 @@ import sys
 import tarfile
 from collections import OrderedDict
 
-URL = "https://github.com/sanderv32/framework-esp8266-nonos-sdk/raw/master/{filename}"
+URL = ("https://github.com/sanderv32/framework-esp8266-nonos-sdk"
+       "/raw/master/{filename}")
 SDK = "ESP8266_NONOS_SDK"
 ARCHIVE_PATH = "ESP8266_NONOS_SDK-master"
 TMP_DIR = "ESP8266_NONOS_SDK-master"
@@ -26,33 +28,13 @@ GH_RELEASE = """
 }}"""
 
 
-class DIR(object):
-    """
-    Directory sort class
-    """
-
-    @classmethod
-    def list(cls, directory=None):
-        dirlist = []
-        if directory is None:
-            raise Exception("directory in mandatory")
-        for dirname, _, filelist in os.walk(directory):
-            for f in filelist:
-                dirlist.append(dirname + "/" + f)
-        dirlist.sort()
-        for f in dirlist:
-            yield f
-
-
 class TAR(object):
-    """
-    TAR Class
-    """
+    """TAR Class."""
 
     @classmethod
     def write(cls, filename=None):
         """
-        Write tar.gz file
+        Write tar.gz file.
 
         :param filename:    Filename of the tar file
         """
@@ -64,7 +46,7 @@ class TAR(object):
     @staticmethod
     def filter(tarinfo):
         """
-        Filter function which will filter out .git directory
+        Filter function which will filter out .git directory.
 
         :param tarinfo: TarInfo given to filter
         :return:        Returns the path if doesn't match filter otherwise None
@@ -76,20 +58,19 @@ class TAR(object):
 
 
 def main():
-    """
-    MAIN Function
-    """
+    """Main function of this program."""
     exitcode = 0
     manifest_file = "manifest.json"
-    with open(manifest_file) as f:
-        manifest_data = json.load(f, object_pairs_hook=OrderedDict)
+    with open(manifest_file) as f_manifest:
+        manifest_data = json.load(f_manifest, object_pairs_hook=OrderedDict)
 
     # Checkout submodule
     subprocess.call(['git', 'submodule', 'update'])
     if not os.path.exists(TMP_DIR):
         os.mkdir(TMP_DIR)
     try:
-        tags = subprocess.check_output(['git', 'tag'], stderr=subprocess.STDOUT, cwd=TMP_DIR).splitlines()
+        tags = subprocess.check_output(['git', 'tag'], stderr=subprocess.STDOUT,
+                                       cwd=TMP_DIR).splitlines()
         tags.append("master")
         for tag in tags:
             print("Changing repo to tag: %s" % tag)
@@ -101,20 +82,21 @@ def main():
             print("Creating archive: %s" % filename)
             TAR.write(filename)
 
-            with open(filename) as f:
-                sha1sum = hashlib.sha1(f.read()).hexdigest()
+            with open(filename) as f_archive:
+                sha1sum = hashlib.sha1(f_archive.read()).hexdigest()
 
             release_entry = OrderedDict([
                 ('url', URL.format(filename=filename)),
                 ('sha1', sha1sum),
                 ('version', tag[1:] if tag[0] == "v" else tag)
             ])
+            master = manifest_data['framework-esp8266-nonos-sdk'][0]
             if tag == "master":
-                if manifest_data['framework-esp8266-nonos-sdk'][0]['version'] == "master":
-                    del manifest_data['framework-esp8266-nonos-sdk'][0]
-            manifest_data['framework-esp8266-nonos-sdk'].insert(0, release_entry)
-        with open(manifest_file, "w") as f:
-            f.write(json.dumps(manifest_data, indent=2))
+                if master['version'] == "master":
+                    del master
+            master.insert(0, release_entry)
+        with open(manifest_file, "w") as f_manifest:
+            f_manifest.write(json.dumps(manifest_data, indent=2))
     except Exception as err:
         print(err.message)
         exitcode = 1
