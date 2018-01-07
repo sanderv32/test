@@ -17,6 +17,8 @@ URL = ("https://github.com/sanderv32/framework-esp8266-nonos-sdk"
 SDK = "ESP8266_NONOS_SDK"
 ARCHIVE_PATH = "ESP8266_NONOS_SDK-master"
 TMP_DIR = "ESP8266_NONOS_SDK-master"
+CACHE_DIR = ".cache"
+CACHED_SHA1 = "%s/master-sha1.txt" % CACHE_DIR
 GH_RELEASE = """
 {{
   "tag_name": "{tag_name}",
@@ -66,11 +68,17 @@ def main():
 
     # Checkout submodule
     subprocess.call(['git', 'submodule', 'update'])
+
+    # Create cache dir if it doesn't exists
+    if not os.path.exists(CACHE_DIR):
+        os.mkdir(CACHE_DIR)
+
+    # Create temp dir if it doesn't exists
     if not os.path.exists(TMP_DIR):
         os.mkdir(TMP_DIR)
+
     try:
-        tags = subprocess.check_output(['git', 'tag'], stderr=subprocess.STDOUT,
-                                       cwd=TMP_DIR).splitlines()
+        tags = subprocess.check_output(['git', 'tag'], stderr=subprocess.STDOUT, cwd=TMP_DIR).splitlines()
         tags.append("master")
         for tag in tags:
             print("Changing repo to tag: %s" % tag)
@@ -92,12 +100,25 @@ def main():
             ])
             master = manifest_data['framework-esp8266-nonos-sdk'][0]
             if tag == "master":
+                if os.path.exists(CACHED_SHA1):
+                    # CACHED_SHA1 exists in cache directory, lets compare it with current master SHA1
+                    with open(CACHED_SHA1, "r") as f_sha1:
+                        cached_sha1 = f_sha1.read()
+                    current_sha1 = subprocess.check_output(["git", "rev-parse", "HEAD"])
+                    if current_sha1 == cached_sha1:
+                        # Master SHA1 is the same like previous build so skip master
+                        continue
+                # CACHED_SHA1 doesn't exist, write current master SHA1
+                current_sha1 = subprocess.check_output(["git", "rev-parse", "HEAD"])
+                with open(CACHED_SHA1, "w") as f_sha1:
+                    f_sha1.write(current_sha1)
+
                 if master['version'] == "master":
-                    del master
-            manifest_data['framework-esp8266-nonos-sdk'].insert(0,
-                                                                release_entry)
+                    del manifest_data['framework-esp8266-nonos-sdk'][0]
+            manifest_data['framework-esp8266-nonos-sdk'].insert(0, release_entry)
         with open(manifest_file, "w") as f_manifest:
             f_manifest.write(json.dumps(manifest_data, indent=2))
+
     except Exception as err:
         print(err.message)
         exitcode = 1
