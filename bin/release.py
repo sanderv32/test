@@ -62,6 +62,7 @@ class TAR(object):
 def main():
     """Main function of this program."""
     exitcode = 0
+    changed = False
     manifest_file = "manifest.json"
     with open(manifest_file) as f_manifest:
         manifest_data = json.load(f_manifest, object_pairs_hook=OrderedDict)
@@ -84,11 +85,14 @@ def main():
             print("Changing repo to tag: %s" % tag)
             subprocess.call(['git', 'checkout', tag], cwd=TMP_DIR)
 
-            filename = "%s-%s.tar.gz" % (SDK, tag[1:] if tag[0] == "v" else tag)
+            version = tag[1:] if tag[0] == "v" else tag
+            filename = "%s-%s.tar.gz" % (SDK, version)
             if os.path.exists(filename) and tag != "master":
                 continue
+
             print("Creating archive: %s" % filename)
             TAR.write(filename)
+            changed = True
 
             with open(filename) as f_archive:
                 sha1sum = hashlib.sha1(f_archive.read()).hexdigest()
@@ -96,37 +100,45 @@ def main():
             release_entry = OrderedDict([
                 ('url', URL.format(filename=filename)),
                 ('sha1', sha1sum),
-                ('version', tag[1:] if tag[0] == "v" else tag)
+                ('version', version)
             ])
+
             master = manifest_data['framework-esp8266-nonos-sdk'][0]
             if tag == "master":
                 if os.path.exists(CACHED_SHA1):
                     # CACHED_SHA1 exists in cache directory, lets compare it with current master SHA1
                     with open(CACHED_SHA1, "r") as f_sha1:
                         cached_sha1 = f_sha1.read()
-                    current_sha1 = subprocess.check_output(["git", "rev-parse", "HEAD"])
-                    print("'%s' , '%s'" % (cached_sha1, current_sha1))
+                    current_sha1 = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=TMP_DIR)
+                    print("Cached SHA1 : %s\nCurrent SHA1: %s" % (cached_sha1.rstrip(), current_sha1.rstrip()))
                     if current_sha1 == cached_sha1:
                         # Master SHA1 is the same like previous build so skip master
                         print("Master branch didn't change, skipping...")
+                        changed = False
                         continue
+
                 # CACHED_SHA1 doesn't exist, write current master SHA1
                 print("New master branch, creating new archive...")
-                current_sha1 = subprocess.check_output(["git", "rev-parse", "HEAD"])
+                current_sha1 = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=TMP_DIR)
                 with open(CACHED_SHA1, "w") as f_sha1:
                     f_sha1.write(current_sha1)
 
                 if master['version'] == "master":
+                    # There can only be one master in the manifest file, delete the existing one
                     del manifest_data['framework-esp8266-nonos-sdk'][0]
+
+            # Insert release entry in manifest dictionary
             manifest_data['framework-esp8266-nonos-sdk'].insert(0, release_entry)
-        with open(manifest_file, "w") as f_manifest:
-            f_manifest.write(json.dumps(manifest_data, indent=2))
+
+        if changed:
+            with open(manifest_file, "w") as f_manifest:
+                f_manifest.write(json.dumps(manifest_data, indent=2))
 
     except Exception as err:
         print(err.message)
         exitcode = 1
-    sys.exit(exitcode)
+    return exitcode
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
