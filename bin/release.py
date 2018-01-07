@@ -107,8 +107,10 @@ def main():
                     current_sha1 = subprocess.check_output(["git", "rev-parse", "HEAD"])
                     if current_sha1 == cached_sha1:
                         # Master SHA1 is the same like previous build so skip master
+                        print("Master branch didn't change, skipping...")
                         continue
                 # CACHED_SHA1 doesn't exist, write current master SHA1
+                print("New master branch, creating new archive...")
                 current_sha1 = subprocess.check_output(["git", "rev-parse", "HEAD"])
                 with open(CACHED_SHA1, "w") as f_sha1:
                     f_sha1.write(current_sha1)
