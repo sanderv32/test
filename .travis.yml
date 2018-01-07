@@ -8,9 +8,17 @@ cache:
   directories:
     - $HOME/.cache
 
-script:
-  - ls -al
-  - python bin/release.py
-  - chmod +x bin/upload.sh
-  - bin/upload.sh
-  - cat manifest.json
+jobs:
+  include :
+    - stage: Prepare cache
+      script: true
+    - stage: Show directory contents
+      script: ls -al
+    - stage: Check for new releases
+      script: python bin/release.py
+    - stage: Upload to repository
+      script:
+        - chmod +x bin/upload.sh
+        - bin/upload.sh
+    - stage: Show new manifest.json
+      script: cat manifest.json
