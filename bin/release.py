@@ -105,6 +105,7 @@ def main():
                     with open(CACHED_SHA1, "r") as f_sha1:
                         cached_sha1 = f_sha1.read()
                     current_sha1 = subprocess.check_output(["git", "rev-parse", "HEAD"])
+                    print("'%s' , '%s'" % (cached_sha1, current_sha1))
                     if current_sha1 == cached_sha1:
                         # Master SHA1 is the same like previous build so skip master
                         print("Master branch didn't change, skipping...")
