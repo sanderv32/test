@@ -10,14 +10,10 @@ cache:
 
 jobs:
   include :
-    - stage: Prepare cache
-      script: true
-    - stage: Check for new releases
+    - stage: Check for new releases and upload
       script:
         - ls -al
         - python bin/release.py
-    - stage: Upload to repository
-      script:
         - chmod +x bin/upload.sh
         - bin/upload.sh
         - cat manifest.json
