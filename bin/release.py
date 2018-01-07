@@ -12,8 +12,7 @@ import sys
 import tarfile
 from collections import OrderedDict
 
-URL = ("https://github.com/sanderv32/framework-esp8266-nonos-sdk"
-       "/raw/master/{filename}")
+URL = "https://github.com/sanderv32/framework-esp8266-nonos-sdk/raw/master/{filename}"
 SDK = "ESP8266_NONOS_SDK"
 ARCHIVE_PATH = "ESP8266_NONOS_SDK-master"
 TMP_DIR = "ESP8266_NONOS_SDK-master"
