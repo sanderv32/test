@@ -16,7 +16,7 @@ URL = "https://github.com/sanderv32/framework-esp8266-nonos-sdk/raw/master/{file
 SDK = "ESP8266_NONOS_SDK"
 ARCHIVE_PATH = "ESP8266_NONOS_SDK-master"
 TMP_DIR = "ESP8266_NONOS_SDK-master"
-CACHE_DIR = ".cache"
+CACHE_DIR = "cache"
 CACHED_SHA1 = "%s/master-sha1.txt" % CACHE_DIR
 GH_RELEASE = """
 {{
