@@ -124,7 +124,8 @@ def main():
 
                 if master['version'] == "master":
                     # There can only be one master in the manifest file, delete the existing one
-                    del manifest_data['framework-esp8266-nonos-sdk'][0]
+                    manifest_data['framework-esp8266-nonos-sdk'].pop(0)
+                    # del manifest_data['framework-esp8266-nonos-sdk'][0]
 
             # Insert release entry in manifest dictionary
             manifest_data['framework-esp8266-nonos-sdk'].insert(0, release_entry)
