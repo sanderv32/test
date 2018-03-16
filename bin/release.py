@@ -4,13 +4,13 @@
 
 from __future__ import print_function
 
+import argparse
 import hashlib
 import json
 import os
 import subprocess
 import sys
 import tarfile
-from argparse import ArgumentParser
 from collections import OrderedDict
 
 URL = "https://github.com/sanderv32/framework-esp8266-nonos-sdk/raw/master/{filename}"
@@ -19,22 +19,13 @@ ARCHIVE_PATH = "ESP8266_NONOS_SDK-master"
 TMP_DIR = "ESP8266_NONOS_SDK-master"
 CACHE_DIR = "{home}/cache".format(home=os.getenv("HOME"))
 CACHED_SHA1 = "%s/master-sha1.txt" % CACHE_DIR
-GH_RELEASE = """
-{{
-  "tag_name": "{tag_name}",
-  "target_commitish": "master",
-  "name": "{name}",
-  "body": "{body}",
-  "draft": false,
-  "prerelease": false
-}}"""
 
 
-class Args:
+class Args(object):
     """ Argument class """
 
     def __init__(self):
-        argparser = ArgumentParser()
+        argparser = argparse.ArgumentParser()
         argparser.add_argument("-u", "--upload-script", dest="uploadscript", help="Script to upload changes",
                                required=False, action="store", default=None)
         self.__args = argparser.parse_args()
