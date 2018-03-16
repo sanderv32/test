@@ -13,7 +13,5 @@ jobs:
     - stage: Check for new releases and upload
       script:
         - ls -al
-        - python bin/release.py
-        - chmod +x bin/upload.sh
-        - bin/upload.sh
+        - python bin/release.py -u upload.sh
         - cat manifest.json

@@ -10,6 +10,7 @@ import os
 import subprocess
 import sys
 import tarfile
+from argparse import ArgumentParser
 from collections import OrderedDict
 
 URL = "https://github.com/sanderv32/framework-esp8266-nonos-sdk/raw/master/{filename}"
@@ -27,6 +28,20 @@ GH_RELEASE = """
   "draft": false,
   "prerelease": false
 }}"""
+
+
+class Args:
+    """ Argument class """
+
+    def __init__(self):
+        argparser = ArgumentParser()
+        argparser.add_argument("-u", "--upload-script", dest="uploadscript", help="Script to upload changes",
+                               required=False, action="store", default=None)
+        self.__args = argparser.parse_args()
+
+    def __getitem__(self, item):
+        """ Get argument as dictionary """
+        return self.__args.__dict__[item]
 
 
 class TAR(object):
@@ -60,8 +75,10 @@ class TAR(object):
 
 def main():
     """Main function of this program."""
+    args = Args()
     exitcode = 0
     changed = False
+    upload_script = args['uploadscript']
     manifest_file = "manifest.json"
     with open(manifest_file) as f_manifest:
         manifest_data = json.load(f_manifest, object_pairs_hook=OrderedDict)
@@ -125,7 +142,6 @@ def main():
                 if master['version'] == "master":
                     # There can only be one master in the manifest file, delete the existing one
                     manifest_data['framework-esp8266-nonos-sdk'].pop(0)
-                    # del manifest_data['framework-esp8266-nonos-sdk'][0]
 
             # Insert release entry in manifest dictionary
             manifest_data['framework-esp8266-nonos-sdk'].insert(0, release_entry)
@@ -133,6 +149,8 @@ def main():
         if changed:
             with open(manifest_file, "w") as f_manifest:
                 f_manifest.write(json.dumps(manifest_data, indent=2))
+            if upload_script:
+                subprocess.call([upload_script])
 
     except Exception as err:
         print(err.message)
