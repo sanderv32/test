@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -x
+[ -n "$DEBUG" ] && set -x
 
 git checkout master
 
