@@ -141,7 +141,8 @@ def main():
             with open(manifest_file, "w") as f_manifest:
                 f_manifest.write(json.dumps(manifest_data, indent=2))
             if upload_script:
-                subprocess.call([upload_script])
+                my_env = os.environ.copy()
+                subprocess.call([upload_script], env=my_env)
 
     except Exception as err:
         print(err.message)
