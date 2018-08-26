@@ -2,6 +2,16 @@
   "framework-esp8266-nonos-sdk": [
     {
       "url": "https://github.com/sanderv32/framework-esp8266-nonos-sdk/raw/master/ESP8266_NONOS_SDK-master.tar.gz", 
+      "sha1": "3d1e2b48369e63c0d5818cb86caf16a8020728ff", 
+      "version": "master"
+    }, 
+    {
+      "url": "https://github.com/sanderv32/framework-esp8266-nonos-sdk/raw/master/ESP8266_NONOS_SDK-3.0.tar.gz", 
+      "sha1": "2458aa2f842586fc4000764053ec1b91d7d23c29", 
+      "version": "3.0"
+    }, 
+    {
+      "url": "https://github.com/sanderv32/framework-esp8266-nonos-sdk/raw/master/ESP8266_NONOS_SDK-master.tar.gz", 
       "sha1": "8eed2679c19bc19399c9f542a97a57a878df75f4", 
       "version": "master"
     }, 
