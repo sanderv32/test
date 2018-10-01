@@ -2,7 +2,7 @@
   "framework-esp8266-nonos-sdk": [
     {
       "url": "https://github.com/sanderv32/framework-esp8266-nonos-sdk/raw/master/ESP8266_NONOS_SDK-master.tar.gz", 
-      "sha1": "357c3264ba3b05c32d9247de91cffa0010a53c7b", 
+      "sha1": "0a93de970a09ce5e29323a3238721fedc67c6fbf", 
       "version": "master"
     }, 
     {
@@ -11,19 +11,9 @@
       "version": "3.0"
     }, 
     {
-      "url": "https://github.com/sanderv32/framework-esp8266-nonos-sdk/raw/master/ESP8266_NONOS_SDK-master.tar.gz", 
-      "sha1": "8eed2679c19bc19399c9f542a97a57a878df75f4", 
-      "version": "master"
-    }, 
-    {
       "url": "https://github.com/sanderv32/framework-esp8266-nonos-sdk/raw/master/ESP8266_NONOS_SDK-2.2.1.tar.gz", 
       "sha1": "23c0193a9a603f79f09e3d413a2302f61e2efc35", 
       "version": "2.2.1"
-    }, 
-    {
-      "url": "https://github.com/sanderv32/framework-esp8266-nonos-sdk/raw/master/ESP8266_NONOS_SDK-master.tar.gz", 
-      "sha1": "ad9e20a1c3487e3754732b3918f7a174963a05ad", 
-      "version": "master"
     }, 
     {
       "url": "https://github.com/sanderv32/framework-esp8266-nonos-sdk/raw/master/ESP8266_NONOS_SDK-2.2.0.tar.gz", 
