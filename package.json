@@ -3,5 +3,5 @@
   "name": "framework-esp8266-nonos-sdk",
   "system": "*",
   "url": "https://github.com/espressif/ESP8266_NONOS_SDK",
-  "version": "2.1.0"
+  "version": "3.0"
 }
