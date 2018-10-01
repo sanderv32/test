@@ -110,7 +110,6 @@ def main():
                 ('version', version)
             ])
 
-            master = manifest_data['framework-esp8266-nonos-sdk'][0]
             if tag == "master":
                 if os.path.exists(CACHED_SHA1):
                     # CACHED_SHA1 exists in cache directory, lets compare it with current master SHA1
@@ -124,15 +123,15 @@ def main():
                         changed = False
                         continue
 
+                # There can only be one master, so filter out master
+                manifest_data['framework-esp8266-nonos-sdk'] = \
+                    filter(lambda x: x['version'] != 'master', manifest_data.get('framework-esp8266-nonos-sdk'))
+
                 # CACHED_SHA1 doesn't exist, write current master SHA1
                 print("New master branch, creating new archive...")
                 current_sha1 = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=TMP_DIR)
                 with open(CACHED_SHA1, "w") as f_sha1:
                     f_sha1.write(current_sha1)
-
-                if master['version'] == "master":
-                    # There can only be one master in the manifest file, delete the existing one
-                    manifest_data['framework-esp8266-nonos-sdk'].pop(0)
 
             # Insert release entry in manifest dictionary
             manifest_data['framework-esp8266-nonos-sdk'].insert(0, release_entry)
