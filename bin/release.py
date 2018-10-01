@@ -107,6 +107,7 @@ def main():
             release_entry = OrderedDict([
                 ('url', URL.format(filename=filename)),
                 ('sha1', sha1sum),
+                ('system', "*"),
                 ('version', version)
             ])
 
