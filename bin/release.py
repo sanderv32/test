@@ -20,6 +20,15 @@ ARCHIVE_PATH = "ESP8266_NONOS_SDK-master"
 TMP_DIR = "ESP8266_NONOS_SDK-master"
 CACHE_DIR = "{home}/cache".format(home=os.getenv("HOME"))
 CACHED_SHA1 = "%s/master-sha1.txt" % CACHE_DIR
+PACKAGE_JSON = '''
+{
+  "description" : "ESP8266 NONOS SDK",
+  "name": "framework-esp8266-nonos-sdk",
+  "system": "*",
+  "url": "https://github.com/espressif/ESP8266_NONOS_SDK",
+  "version": "{VERSION}"
+}
+'''
 
 
 class Args(object):
@@ -72,6 +81,7 @@ def main():
     changed = False
     upload_script = args['uploadscript']
     manifest_file = "manifest.json"
+    package_file = "package.json"
     with open(manifest_file) as f_manifest:
         manifest_data = json.load(f_manifest, object_pairs_hook=OrderedDict)
 
@@ -97,6 +107,10 @@ def main():
             filename = "%s-%s.tar.gz" % (SDK, version)
             if os.path.exists(filename) and tag != "master":
                 continue
+
+            print("Creating 'package.json'")
+            with open(TMP_DIR + "/" + package_file, mode="w") as f_package:
+                f_package.write(PACKAGE_JSON.replace('{VERSION}', version))
 
             print("Creating archive: %s" % filename)
             TAR.write(filename)
