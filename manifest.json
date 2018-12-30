@@ -2,7 +2,7 @@
   "framework-esp8266-nonos-sdk": [
     {
       "url": "https://github.com/sanderv32/test/raw/master/ESP8266_NONOS_SDK-master.tar.gz", 
-      "sha1": "af79d0b3e269be8dc1ef504fc518c8923e71e817", 
+      "sha1": "82cd9d0e0fbd6b2c284adb71156c7f4725852d66", 
       "version": "master"
     }, 
     {
